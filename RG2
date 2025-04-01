@@ -164,4 +164,56 @@
 
         function allocateMoney(box) {
             if (moneyLeft > 0) {
-                if (rolls[rollCount - 1] === 'Green' && box
+                if (rolls[rollCount - 1] === 'Green' && box === gameNames[currentGame - 1].boxes[0]) {
+                    stamfordTotal += 0.50;
+                } else if (rolls[rollCount - 1] === 'Pink' && box === gameNames[currentGame - 1].boxes[1]) {
+                    syracuseTotal += 0.50;
+                }
+                moneyLeft -= 0.50;
+                updateMoneyLeft();
+
+                if (rollCount === maxRolls) {
+                    showEarnings();
+                } else {
+                    rollDie();
+                }
+            }
+        }
+
+        function updateMoneyLeft() {
+            document.getElementById('money-left').innerHTML = `Money Left: $${moneyLeft.toFixed(2)}`;
+        }
+
+        function showEarnings() {
+            document.getElementById('final-score').innerHTML = `Game Over!<br>${gameNames[currentGame - 1].name}<br>Syracuse: $${syracuseTotal.toFixed(2)}<br>Stamford: $${stamfordTotal.toFixed(2)}`;
+            document.getElementById('final-score').classList.remove('hidden');
+            document.getElementById('roll-die').innerHTML = "Next Game";
+            document.getElementById('roll-die').disabled = false;
+        }
+
+        document.getElementById('roll-die').addEventListener('click', function() {
+            if (rollCount === maxRolls) {
+                if (currentGame < games) {
+                    currentGame++;
+                    startGame();
+                    document.getElementById('roll-die').innerHTML = "Roll the Die";
+                } else {
+                    document.getElementById('final-score').innerHTML = "All Games Completed!";
+                    document.getElementById('final-score').classList.remove('hidden');
+                }
+            } else {
+                rollDie();
+            }
+        });
+
+        document.getElementById('Syracuse').addEventListener('click', function() {
+            allocateMoney('Syracuse');
+        });
+        document.getElementById('Stamford').addEventListener('click', function() {
+            allocateMoney('Stamford');
+        });
+
+        startGame();
+    </script>
+</body>
+</html>
